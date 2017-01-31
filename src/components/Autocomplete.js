@@ -1,9 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component, PropTypes } from 'react';
 import './Autocomplete.css';
 
 class Autocomplete extends Component {
-	constructor(props){
-		super(props);
+  static props = {
+    items: PropTypes.arrayOf(PropTypes.string).isRequired
+  }
+
+	constructor(){
+		super();
 
     this.state = {
       matchedItems: [],
@@ -12,30 +16,11 @@ class Autocomplete extends Component {
       showOptions: false
     }
 
-    //mock data
-    this.items = [
-      "Livepath",
-      "Youspan",
-      "Skyble",
-      "Browsedrive",
-      "Youtags",
-      "Shufflester",
-      "Devcast",
-      "Fatz",
-      "Cogilith",
-      "Digitube",
-      "Feednation",
-      "Feedbug",
-      "Tagtune",
-      "Tekfly",
-      "Camido",
-      "Eamia",
-      "Trilia",
-      "Youfeed",
-      "Yakitri",
-      "Voonte"
-    ];
-	}
+    this.onChange = this.onChange.bind(this);
+    this.onBlur = this.onBlur.bind(this);
+    this.onItemClick = this.onItemClick.bind(this);
+    this.onItemHover = this.onItemHover.bind(this);
+  }
 
   //setting state after inputfield loses focus
   onBlur() {
@@ -73,7 +58,7 @@ class Autocomplete extends Component {
 
   //filtering data
   search(value) {
-    const matchedItems = this.items.filter(item => new RegExp(value, 'i').test(item));
+    const matchedItems = this.props.items.filter(item => new RegExp(value, 'i').test(item));
     const showOptions = matchedItems.length > 0;
 
     this.setState({
@@ -88,12 +73,10 @@ class Autocomplete extends Component {
         <input
           className="autocomplete-input"
           type="text"
-          value={this.state.inputValue}
-          onChange={this.onChange.bind(this)}
-          onBlur={this.onBlur.bind(this)}
+          onChange={this.onChange}
+          onBlur={this.onBlur}
           placeholder="type here"
         />
-        //Dropdown Container
         { this.state.showOptions &&
           <div className="autocomplete-options">
             {
@@ -102,8 +85,8 @@ class Autocomplete extends Component {
                   <div 
                     className="autocomplete-option"
                     key={item}
-                    onClick={this.onItemClick.bind(this)}
-                    onMouseOver={this.onItemHover.bind(this, item)}
+                    onClick={this.onItemClick}
+                    onMouseOver={this.onItemHover}
                   >
                     {item}
                   </div>
